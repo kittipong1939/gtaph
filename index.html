@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ammonia, Nitrite, Hardness, and Calcium Concentration Line Graphs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 1200px; /* Increased width */
+            margin: auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        canvas {
+            width: 100%; /* Make canvas take full width */
+            height: 600px; /* Increased height */
+        }
+        .chart-title {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="chart-title">Ammonia</h2>
+        <canvas id="ammoniaChart"></canvas>
+        <h2 class="chart-title">Nitrite</h2>
+        <canvas id="nitriteChart"></canvas>
+        <h2 class="chart-title">Hardness</h2>
+        <canvas id="hardnessChart"></canvas>
+        <h2 class="chart-title">Calcium</h2>
+        <canvas id="calciumChart"></canvas>
+        <h2 class="chart-title">Alkaline</h2>
+        <canvas id="alkalineChart"></canvas>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ammoniaCtx = document.getElementById('ammoniaChart').getContext('2d');
+        const nitriteCtx = document.getElementById('nitriteChart').getContext('2d');
+        const hardnessCtx = document.getElementById('hardnessChart').getContext('2d');
+        const calciumCtx = document.getElementById('calciumChart').getContext('2d');
+        const alkalineCtx = document.getElementById('alkalineChart').getContext('2d');
+        
+        const ammoniaData = {
+            labels: ['1', '2', '3', '4', '5'],
+            datasets: [
+                { label: 'a1', data: [0.20214, 0.095418, 0.13207, null, null], borderColor: '#FF6384', fill: false },
+                { label: 'a2', data: [0.147162, 0.787494, null, null, null], borderColor: '#36A2EB', fill: false },
+                { label: 'a3', data: [0.118056, 0.726048, null, null, null], borderColor: '#FFCE56', fill: false },
+                { label: 'a4', data: [0.265742, 0.64951, null, 0.042596, null], borderColor: '#4BC0C0', fill: false },
+                { label: 'a5', data: [0.152552, 0.616092, null, null, null], borderColor: '#9966FF', fill: false },
+                { label: 'b1', data: [0.133148, 0.145006, 0.14285, 0.107276, null], borderColor: '#FF9F40', fill: false },
+                { label: 'b2', data: [0.161176, 0.646276, 0.11051, null, null], borderColor: '#FFCD56', fill: false },
+                { label: 'b3', data: [0.084638, 0.736828, null, null, null], borderColor: '#C9CBCF', fill: false },
+                { label: 'b4', data: [0.220466, 0.731438, 0.209686, null, null], borderColor: '#1E3A5F', fill: false },
+                { label: 'b5', data: [0.136382, 0.70341, 0.10512, null, null], borderColor: '#32D296', fill: false },
+                { label: 'l4', data: [0.047986, 0.04583, 0.677538, 0.106198, null], borderColor: '#1E9FFF', fill: false },
+                { label: 'l5', data: [0.046908, 0.495356, 0.179502, 0.111588, null], borderColor: '#FF5733', fill: false },
+                { label: 'l6', data: [0.053376, 0.801508, 0.145006, 0.026426, null], borderColor: '#900C3F', fill: false },
+                { label: 'l7', data: [0.057688, 0.675382, null, null, null], borderColor: '#581845', fill: false },
+                { label: 'l8', data: [0.059844, null, null, null, null], borderColor: '#DAF7A6', fill: false },
+                { label: 'l11', data: [0.009178, 0.802586, 0.145006, 0.05661, 0.055532], borderColor: '#FFC300', fill: false }
+            ]
+        };
+
+        const nitriteData = {
+            labels: ['1', '2', '3', '4', '5'],
+            datasets: [
+                { label: 'a1', data: [0.0371275, 0.0323675, null, null, null, null, null], borderColor: '#FF6384', fill: false },
+                { label: 'a2', data: [0.0642, 0.02136, null, null, null, null, null], borderColor: '#36A2EB', fill: false },
+                { label: 'a3', data: [0.02136, 0.217115, null, null, null, null, null], borderColor: '#FFCE56', fill: false },
+                { label: 'a4', data: [0.1037675, 0.1626725, 0.246865, 0.004105, null, null, null], borderColor: '#4BC0C0', fill: false },
+                { label: 'a5', data: [0.0335575, 0.062415, null, null, null, null, null], borderColor: '#9966FF', fill: false },
+                { label: 'b1', data: [0.044565, 0.0841325, 0.1936125, 0.1832, null, null, null], borderColor: '#FF9F40', fill: false },
+                { label: 'b2', data: [0.0520025, 0.029095, 0.1370875, null, null, null, null], borderColor: '#FFCD56', fill: false },
+                { label: 'b3', data: [0.0115425, 0.08562, null, null, null, null, null], borderColor: '#C9CBCF', fill: false },
+                { label: 'b4', data: [0.114775, 0.3078525, 0.364675, null, null, null, null], borderColor: '#1E3A5F', fill: false },
+                { label: 'b5', data: [0.0520025, 0.079075, 0.0877025, null, null, null, null], borderColor: '#32D296', fill: false },
+                { label: 'l4', data: [0.0520025, 0.05111, 0.068365, 0.0639025, null, null, null], borderColor: '#1E9FFF', fill: false },
+                { label: 'l5', data: [0.0014275, 0.0049975, 0.0047, 0.07372, null, null, null], borderColor: '#FF5733', fill: false },
+                { label: 'l6', data: [0.00827, 0.00351, 0.0049975, 0.004105, null, null, null], borderColor: '#900C3F', fill: false },
+                { label: 'l7', data: [0.0079725, 0.0109475, null, null, null, null, null], borderColor: '#581845', fill: false },
+                { label: 'l8', data: [0.007675, null, null, null, null, null, null], borderColor: '#DAF7A6', fill: false },
+                { label: 'l11', data: [0.004105, 0.0085675, 0.0240375, 0.0359375, 0.3738975, null, null], borderColor: '#FFC300', fill: false },
+                
+            ]
+        };
+        const hardnessData = {
+        labels: ['1', '2', '3'],
+        datasets: [
+            { label: 'a1', data: [5000, 7320, null], borderColor: '#FF6384', fill: false },
+            { label: 'a2', data: [5240, 7160, null], borderColor: '#36A2EB', fill: false },
+            { label: 'a3', data: [5000, 7250, null], borderColor: '#FFCE56', fill: false },
+            { label: 'a4', data: [5550, 7120, null], borderColor: '#4BC0C0', fill: false },
+            { label: 'a5', data: [6110, 6800, null], borderColor: '#9966FF', fill: false },
+            { label: 'b1', data: [5380, 6630, null], borderColor: '#FF9F40', fill: false },
+            { label: 'b2', data: [6100, 6760, null], borderColor: '#FFCD56', fill: false },
+            { label: 'b3', data: [5250, 6730, null], borderColor: '#C9CBCF', fill: false },
+            { label: 'b4', data: [5400, 6930, null], borderColor: '#1E3A5F', fill: false },
+            { label: 'b5', data: [6200, 7130, null], borderColor: '#32D296', fill: false },
+            { label: 'l4', data: [6240, 7110, null], borderColor: '#1E9FFF', fill: false },
+            { label: 'l5', data: [6490, 7200, null], borderColor: '#FF5733', fill: false },
+            { label: 'l6', data: [5420, 7010, null], borderColor: '#900C3F', fill: false },
+            { label: 'l7', data: [6500, 7080, null], borderColor: '#581845', fill: false },
+            { label: 'l8', data: [5530, null, null], borderColor: '#DAF7A6', fill: false },
+            { label: 'l11', data: [5120, 6520, 2320], borderColor: '#FFC300', fill: false }
+        ]
+    };
+    const calciumData = {
+        labels: ['1', '2', '3', '4'],
+        datasets: [
+            { label: 'a1', data: [416.832, 569.136, null, null], borderColor: '#FF6384', fill: false },
+            { label: 'a2', data: [400.8, 585.168, null, null], borderColor: '#36A2EB', fill: false },
+            { label: 'a3', data: [529.056, 609.216, null, null], borderColor: '#FFCE56', fill: false },
+            { label: 'a4', data: [360.72, 665.328, 488.976, null], borderColor: '#4BC0C0', fill: false },
+            { label: 'a5', data: [392.784, 617.232, null, null], borderColor: '#9966FF', fill: false },
+            { label: 'b1', data: [408.816, 496.992, null, 545.088], borderColor: '#FF9F40', fill: false },
+            { label: 'b2', data: [360.72, 496.992, null, null], borderColor: '#FFCD56', fill: false },
+            { label: 'b3', data: [424.848, 529.056, null, null], borderColor: '#C9CBCF', fill: false },
+            { label: 'b4', data: [344.688, 545.088, null, null], borderColor: '#1E3A5F', fill: false },
+            { label: 'b5', data: [400.8, 681.36, null, null], borderColor: '#32D296', fill: false },
+            { label: 'l4', data: [352.704, 593.184, 496.992, null], borderColor: '#1E9FFF', fill: false },
+            { label: 'l5', data: [368.736, 545.088, 488.976, null], borderColor: '#FF5733', fill: false },
+            { label: 'l6', data: [448.896, 569.136, 416.832, null], borderColor: '#900C3F', fill: false },
+            { label: 'l7', data: [488.976, 561.12, null, null], borderColor: '#581845', fill: false },
+            { label: 'l8', data: [328.656, null, null, null], borderColor: '#DAF7A6', fill: false },
+            { label: 'l11', data: [344.688, 561.12, 545.088, 761.52], borderColor: '#FFC300', fill: false }
+        ]
+    };
+    const alkalineData = {
+        labels: ['1', '2', '3', '4', '5'],
+        datasets: [
+            { label: 'a1', data: [171, 212, null, null, null], borderColor: '#FF6384', fill: false },
+            { label: 'a2', data: [191, 218, null, null, null], borderColor: '#36A2EB', fill: false },
+            { label: 'a3', data: [170, 216, null, null, null], borderColor: '#FFCE56', fill: false },
+            { label: 'a4', data: [179, 234, 195, 214, null], borderColor: '#4BC0C0', fill: false },
+            { label: 'a5', data: [215, 238, null, null, null], borderColor: '#9966FF', fill: false },
+            { label: 'b1', data: [245, 216, 221, 205, null], borderColor: '#FF9F40', fill: false },
+            { label: 'b2', data: [210, 211, 221, null, null], borderColor: '#FFCD56', fill: false },
+            { label: 'b3', data: [215, 218, null, null, null], borderColor: '#C9CBCF', fill: false },
+            { label: 'b4', data: [230, 229, 216, null, null], borderColor: '#1E3A5F', fill: false },
+            { label: 'b5', data: [231, 219, 214, null, null], borderColor: '#32D296', fill: false },
+            { label: 'l4', data: [310, 196, 208, 260, null], borderColor: '#1E9FFF', fill: false },
+            { label: 'l5', data: [260, 225, 206, 225, null], borderColor: '#FF5733', fill: false },
+            { label: 'l6', data: [330, 240, 224, 255, null], borderColor: '#900C3F', fill: false },
+            { label: 'l7', data: [337, 215, null, null, null], borderColor: '#581845', fill: false },
+            { label: 'l8', data: [338, null, null, null, null], borderColor: '#DAF7A6', fill: false },
+            { label: 'l11', data: [160, 211, 208, 230, 206], borderColor: '#FFC300', fill: false }
+        ]
+    };
+
+        const ammoniaConfig = {
+            type: 'line',
+            data: ammoniaData,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true
+                },
+                scales: {
+                    x: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Ammonia (mg/l)'
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 1
+                    }
+                }
+            }
+        };
+
+        const nitriteConfig = {
+            type: 'line',
+            data: nitriteData,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true
+                },
+                scales: {
+                    x: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Nitrite (mg/l)'
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 0.5
+                    }
+                }
+            }
+        };
+        const hardnessConfig = {
+    type: 'line',
+    data: hardnessData,
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top',
+            },
+            tooltip: {
+                mode: 'index',
+                intersect: false,
+            },
+        },
+        hover: {
+            mode: 'nearest',
+            intersect: true
+        },
+        scales: {
+            x: {
+                display: true,
+                title: {
+                    display: true,
+                    text: 'Date'
+                }
+            },
+            y: {
+                display: true,
+                title: {
+                    display: true,
+                    text: 'Hardness(mg/l as CaCo  )'
+                },
+                suggestedMin: 0, // Adjusted suggestedMin
+                suggestedMax: 8000 // Adjust max value according to your data
+            }
+        }
+    }
+};
+
+    const calciumConfig = {
+        type: 'line',
+        data: calciumData,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                },
+            },
+            hover: {
+                mode: 'nearest',
+                intersect: true
+            },
+            scales: {
+                x: {
+                    display: true,
+                    title: {
+                        display: true,
+                        text: 'Date'
+                    }
+                },
+                y: {
+                    display: true,
+                    title: {
+                        display: true,
+                        text: 'Calcium (mg/l)'
+                    },
+                    suggestedMin: 0,
+                    suggestedMax: 800 // Adjust max value according to your data
+                }
+            }
+        }
+    };
+    const alkalineConfig = {
+        type: 'line',
+        data: alkalineData,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                },
+            },
+            hover: {
+                mode: 'nearest',
+                intersect: true
+            },
+            scales: {
+                x: {
+                    display: true,
+                    title: {
+                        display: true,
+                        text: 'Date'
+                    }
+                },
+                y: {
+                    display: true,
+                    title: {
+                        display: true,
+                        text: 'Alkaline (mg/l as CaCo  )'
+                    },
+                    suggestedMin: 0,
+                    suggestedMax: 350 // Adjust max value according to your data
+                }
+            }
+        }
+    };
+        const ammoniaChart = new Chart(ammoniaCtx, ammoniaConfig);
+        const nitriteChart = new Chart(nitriteCtx, nitriteConfig);
+        const hardnessChart = new Chart(hardnessCtx, hardnessConfig);
+        const calciumChart = new Chart(calciumCtx, calciumConfig);
+        const alkalineChart = new Chart(alkalineCtx, alkalineConfig);
+    </script>
+</body>
+</html>
